@@ -6,7 +6,7 @@
  * @description نمایش دکمه دانلود بنر در قسمت های پنجره ایی و کادر مشخصات کاربر
  * @invite xfvHwqXXKs
  * @website https://www.beheshtmarket.com
- * @source https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/CreationDate/
+ * @source https://github.com/iamehsandvr/BannerDownloader
  */
 
 module.exports = (_ => {
