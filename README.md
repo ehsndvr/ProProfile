@@ -16,10 +16,10 @@
 نمایش دکمه دانلود بنر در قسمت های پنجره ایی و کادر مشخصات کاربر
 
 
-User Popout:
+مشخصات پنجره ایی کاربر:
 
-![screenshot1](https://mwittrien.github.io/BetterDiscordAddons/Plugins/CreationDate/_res/screenshot1.png)
+![screenshot1](https://raw.githubusercontent.com/iamehsandvr/BannerDownloader/main/Images/BannerDownloader-Popout.png)
 
-User Profile:
+مشخصات کادری کاربر:
 
-![screenshot2](https://mwittrien.github.io/BetterDiscordAddons/Plugins/CreationDate/_res/screenshot2.png)
+![screenshot2](https://raw.githubusercontent.com/iamehsandvr/BannerDownloader/main/Images/BannerDownloader-Profile.png)
