@@ -12,7 +12,7 @@
 module.exports = (_ => {
     const config = {
         "info": {
-            "name": "DownloadBanner",
+            "name": "BannerDownloader",
             "author": "EhsanDavari",
             "version": "1.0.0",
             "description": "نمایش دکمه دانلود بنر در قسمت های پنجره ایی و کادر مشخصات کاربر"
