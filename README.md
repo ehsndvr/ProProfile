@@ -9,6 +9,6 @@
 
 برای دانلود یا کپی رنگ کاربر صفحه مشخصات کاربر را باز میکنید
 
-![screenshot1](https://raw.githubusercontent.com/iamehsandvr/BannerDownloader/main/Images/BannerDownloader-Popout.png)
+![screenshot1](https://raw.githubusercontent.com/iamehsandvr/ProBanner/main/Images/ProBanner.png)
 
 و روی بنر کاربر کلیک میکنید
