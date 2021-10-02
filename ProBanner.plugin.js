@@ -6,7 +6,7 @@
  * @description Allows you to click on a user's banner to copied download link or hex color it in the browser
  * @invite xfvHwqXXKs
  * @website https://www.beheshtmarket.com
- * @source https://github.com/iamehsandvr/BannerDownloader
+ * @source https://github.com/iamehsandvr/ProBanner
  */
 
 module.exports = class ProBanner {
