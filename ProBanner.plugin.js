@@ -38,7 +38,7 @@ module.exports = class ProBanner {
         let ClassBanner = BdApi.findModuleByProps("banner", "bannerOverlay").banner
         if (target.classList.contains(ClassBanner) && target.style.backgroundImage) {
             let BannerUrl = target.style.backgroundImage
-            BannerUrl = BannerUrl.substring(4, url.length - 1).replace(/["']/g, "")
+            BannerUrl = BannerUrl.substring(4, BannerUrl.length - 1).replace(/["']/g, "")
             BannerUrl = BannerUrl.replace(/(?:\?size=\d{3,4})?$/, "?size=4096");
             global.ZLibrary.DiscordModules.ElectronModule.copy(BannerUrl);
             return BdApi.showToast(`Banner Link Copied SuucessFull`, { type: "success" });
