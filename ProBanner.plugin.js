@@ -3,7 +3,7 @@
  * @author EhsanDavari
  * @authorId 553139953597677568
  * @version 1.0.0
- * @description Allows you to click on a user's banner to copied download link or hex color it in the browser
+ * @description Allows you to click on a user's banner to copied download link or hex color it in the browser | پلاگین کپی کردن لینک دانلود یا رنگ بنر کاربر
  * @invite xfvHwqXXKs
  * @website https://www.beheshtmarket.com
  * @source https://github.com/iamehsandvr/ProBanner
