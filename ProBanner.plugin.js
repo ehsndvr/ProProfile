@@ -37,10 +37,10 @@ module.exports = class ProBanner {
     link({ target }) {
         let ClassBanner = BdApi.findModuleByProps("banner", "bannerOverlay").banner
         if (target.classList.contains(ClassBanner) && target.style.backgroundImage) {
-            let url = target.style.backgroundImage
-            url = url.substring(4, url.length - 1).replace(/["']/g, "")
-            url = url.replace(/(?:\?size=\d{3,4})?$/, "?size=4096");
-            global.ZLibrary.DiscordModules.ElectronModule.copy(url);
+            let BannerUrl = target.style.backgroundImage
+            BannerUrl = BannerUrl.substring(4, url.length - 1).replace(/["']/g, "")
+            BannerUrl = BannerUrl.replace(/(?:\?size=\d{3,4})?$/, "?size=4096");
+            global.ZLibrary.DiscordModules.ElectronModule.copy(BannerUrl);
             return BdApi.showToast(`Banner Link Copied SuucessFull`, { type: "success" });
         } else if (target.style.backgroundColor) {
             const ColorCode = target.style.backgroundColor
