@@ -41,19 +41,18 @@ module.exports = class ProBanner {
             BannerUrl = BannerUrl.substring(4, BannerUrl.length - 1).replace(/["']/g, "")
             BannerUrl = BannerUrl.replace(/(?:\?size=\d{3,4})?$/, "?size=4096");
             global.ZLibrary.DiscordModules.ElectronModule.copy(BannerUrl);
-            return BdApi.showToast(`Banner Link Copied SuucessFull`, { type: "success" });
+            return BdApi.showToast(`Banner link was successfully copied`, { type: "success" });
         } else if (target.style.backgroundColor) {
             const ColorCode = target.style.backgroundColor
             var RGBColorCode = ColorCode.replaceAll(/[a-z()]+/ig, '').replaceAll(' ', '').split(',');
             const RGB2HEX = {
-                r: RGBColorCode[0].toString(16),
-                g: RGBColorCode[1].toString(16),
-                b: RGBColorCode[2].toString(16)
+                r: Number(RGBColorCode[0]).toString(16),
+                g: Number(RGBColorCode[1]).toString(16),
+                b: Number(RGBColorCode[2]).toString(16)
             };
-
             const ColorHexCode = "#" + ((RGB2HEX.r.length == 1) ? 0 + RGB2HEX.r : RGB2HEX.r) + ((RGB2HEX.g.length == 1) ? 0 + RGB2HEX.g : RGB2HEX.g) + ((RGB2HEX.b.length == 1) ? 0 + RGB2HEX.b : RGB2HEX.b);
             global.ZLibrary.DiscordModules.ElectronModule.copy(ColorHexCode);
-            return BdApi.showToast(`Hex Color Code : ${ColorHexCode} Copied SuccessFull`, { type: "success" });
+            return BdApi.showToast(`Hex color code : ${ColorHexCode} was successfully copied`, { type: "success" });
 
         }
     }
