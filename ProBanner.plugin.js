@@ -1,61 +1,144 @@
 /**
- * @name ProBanner
+ * @name ProProfile
  * @author EhsanDavari
  * @authorId 553139953597677568
  * @version 1.0.0
- * @description Allows you to click on a user's banner to copied download link or hex color it in the browser | پلاگین کپی کردن لینک دانلود یا رنگ بنر کاربر
+ * @description  with this plugin : You can copy the user banner (banner color and banner photo) You can copy the user's profile picture You can copy About Me to the user You can also copy the user bio
  * @invite xfvHwqXXKs
  * @website https://www.beheshtmarket.com
- * @source https://github.com/iamehsandvr/ProBanner
- * @updateUrl https://raw.githubusercontent.com/iamehsandvr/ProBanner/main/ProBanner.plugin.js
+ * @source https://github.com/iamehsandvr/ProProfile
+ * @updateUrl https://raw.githubusercontent.com/iamehsandvr/ProBanner/main/ProProfile.plugin.js
  */
 
-module.exports = class ProBanner {
-    load() {
-        if (!global.ZeresPluginLibrary) {
-            BdApi.showConfirmationModal("Library plugin is needed",
-                `The library plugin needed for AQWERT'sPluginBuilder is missing. Please click Download Now to install it.`, {
-                confirmText: "Download",
-                cancelText: "Cancel",
-                onConfirm: () => {
-                    require("request").get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", (error, response, body) => {
-                        if (error)
-                            return electron.shell.openExternal("https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js");
+const request = require("request");
+const fs = require("fs");
+const path = require("path");
 
-                        require("fs").writeFileSync(require("path").join(BdApi.Plugins.folder, "0PluginLibrary.plugin.js"), body);
-                    });
+const config = {
+    info: {
+        name: "ProProfile",
+        authors: [
+            {
+                name: "EhsanDavari"
+            }
+        ],
+        version: "1.0.0",
+        description: " with this plugin : You can copy the user banner (banner color and banner photo) You can copy the user's profile picture You can copy About Me to the user You can also copy the user bio",
+    },
+};
+
+module.exports = !global.ZeresPluginLibrary ? class {
+    constructor() {
+        this._config = config;
+    }
+
+    load() {
+        BdApi.showConfirmationModal("Library plugin is needed",
+            `The library plugin needed for AQWERT'sPluginBuilder is missing. Please click Download Now to install it.`, {
+            confirmText: "Download",
+            cancelText: "Cancel",
+            onConfirm: () => {
+                request.get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", (error, response, body) => {
+                    if (error)
+                        return electron.shell.openExternal("https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js");
+
+                    fs.writeFileSync(path.join(BdApi.Plugins.folder, "0PluginLibrary.plugin.js"), body);
+                });
+            }
+        });
+    }
+
+    start() { }
+
+    stop() { }
+} : (([Plugin, Library]) => {
+    const { DiscordModules, WebpackModules, Patcher, PluginUtilities, Toasts } = Library;
+    const { ElectronModule, React } = DiscordModules;
+    class plugin extends Plugin {
+        constructor() {
+            super();
+        }
+        onStart() {
+            this.ProProfile();
+        }
+
+        onStop() {
+            Patcher.unpatchAll();
+        }
+        ProProfile() {
+            const NameTag = WebpackModules.find(m => m?.default?.displayName === "NameTag");
+            const UserBio = WebpackModules.find(m => m?.default?.displayName === "UserBio");
+            const UserBanner = WebpackModules.find(m => m?.default?.displayName === "UserBanner");
+            const CustomStatus = WebpackModules.find(m => m?.default?.displayName === "CustomStatus");
+            document.addEventListener("click", ({ target }) => {
+                if (target.ariaLabel && target.style.cssText) {
+                    let MemberProfileUrl = target.__reactProps$.children.props.children[0].props.children.props.src;
+                    MemberProfileUrl = new RegExp(/assets/).test(MemberProfileUrl) ? `https://discord.com${MemberProfileUrl}` : MemberProfileUrl.replace(/([0-9]+)$/, "4096");
+                    global.ZLibrary.DiscordModules.ElectronModule.copy(MemberProfileUrl);
+                    return BdApi.showToast(`User profile image link successfully`, { type: "success" });
                 }
+            });
+            Patcher.after(NameTag, "default", (_, [props], ret) => {
+                ret.props.style = {
+                    cursor: "pointer"
+                }
+                ret.props.onClick = _ => {
+                    ElectronModule.copy(`${props.name}#${props.discriminator}`);
+                    Toasts.success(`Successfully copied username for <strong>${props.name}</strong>!`);
+                };
+            });
+            Patcher.after(UserBanner, "default", (_, [props], ret) => {
+                ret.props.onClick = _ => {
+                    let ClassBanner = BdApi.findModuleByProps("banner", "bannerOverlay").banner
+                    if (_.target.classList.contains(ClassBanner) && _.target.style.backgroundImage) {
+                        let BannerUrl = _.target.style.backgroundImage
+                        BannerUrl = BannerUrl.substring(4, BannerUrl.length - 1).replace(/["']/g, "")
+                        BannerUrl = BannerUrl.replace(/(?:\?size=\d{3,4})?$/, "?size=4096");
+                        ElectronModule.copy(BannerUrl);
+                        return Toasts.success("Banner link was successfully copied");
+                    } else if (_.target.style.backgroundColor) {
+                        const ColorCode = _.target.style.backgroundColor
+                        var RGBColorCode = ColorCode.replaceAll(/[a-z() ]+/ig, '').split(',');
+                        const RGB2HEX = {
+                            r: Number(RGBColorCode[0]).toString(16),
+                            g: Number(RGBColorCode[1]).toString(16),
+                            b: Number(RGBColorCode[2]).toString(16)
+                        };
+                        const ColorHexCode = "#" + ((RGB2HEX.r.length == 1) ? 0 + RGB2HEX.r : RGB2HEX.r) + ((RGB2HEX.g.length == 1) ? 0 + RGB2HEX.g : RGB2HEX.g) + ((RGB2HEX.b.length == 1) ? 0 + RGB2HEX.b : RGB2HEX.b);
+                        ElectronModule.copy(ColorHexCode);
+                        return Toasts.success(`Hex color code : ${ColorHexCode} was successfully copied`);
+
+                    }
+                };
+                document.addEventListener("click", target => {
+                    if (target.ariaLabel && target.style.cssText) {
+                        let MemberProfileUrl = target.__reactProps$.children.props.children[0].props.children.props.src;
+                        MemberProfileUrl = new RegExp(/assets/).test(MemberProfileUrl) ? `https://discord.com${MemberProfileUrl}` : MemberProfileUrl.replace(/([0-9]+)$/, "4096");
+                        global.ZLibrary.DiscordModules.ElectronModule.copy(MemberProfileUrl);
+                        return BdApi.showToast(`User profile image link successfully`, { type: "success" });
+                    }
+                });
+            });
+            Patcher.after(UserBio, "default", (_, [props], ret) => {
+                ret.props.style = {
+                    cursor: "pointer"
+                }
+                ret.props.onClick = _ => {
+                    ElectronModule.copy(props.userBio);
+                    Toasts.success(`Successfully copied <strong>User Bio</strong>! `);
+                };
+            });
+            Patcher.after(CustomStatus, "default", (_, [props], ret) => {
+                ret.props.style = {
+                    cursor: "pointer"
+                }
+                ret.props.onClick = _ => {
+                    ("state" in props.activity && !("emoji" in props.activity)) ? ElectronModule.copy(`${props.activity.state}`) : ("emoji" in props.activity && "state" in props.activity) ? ElectronModule.copy(`${props.activity.emoji.name} ${props.activity.state}`) : ElectronModule.copy(`${props.activity.emoji.name}`);
+                    Toasts.success(`Successfully copied <strong>User Status</strong>! `);
+                };
             });
         }
     }
 
-    start() {
-        document.addEventListener("click", this.link);
-    }
-    stop() {
-        document.removeEventListener("click", this.link);
-    }
-    link({ target }) {
-        let ClassBanner = BdApi.findModuleByProps("banner", "bannerOverlay").banner
-        if (target.classList.contains(ClassBanner) && target.style.backgroundImage) {
-            let BannerUrl = target.style.backgroundImage
-            BannerUrl = BannerUrl.substring(4, BannerUrl.length - 1).replace(/["']/g, "")
-            BannerUrl = BannerUrl.replace(/(?:\?size=\d{3,4})?$/, "?size=4096");
-            global.ZLibrary.DiscordModules.ElectronModule.copy(BannerUrl);
-            return BdApi.showToast(`Banner link was successfully copied`, { type: "success" });
-        } else if (target.style.backgroundColor) {
-            const ColorCode = target.style.backgroundColor
-            var RGBColorCode = ColorCode.replaceAll(/[a-z()]+/ig, '').replaceAll(' ', '').split(',');
-            const RGB2HEX = {
-                r: Number(RGBColorCode[0]).toString(16),
-                g: Number(RGBColorCode[1]).toString(16),
-                b: Number(RGBColorCode[2]).toString(16)
-            };
-            const ColorHexCode = "#" + ((RGB2HEX.r.length == 1) ? 0 + RGB2HEX.r : RGB2HEX.r) + ((RGB2HEX.g.length == 1) ? 0 + RGB2HEX.g : RGB2HEX.g) + ((RGB2HEX.b.length == 1) ? 0 + RGB2HEX.b : RGB2HEX.b);
-            global.ZLibrary.DiscordModules.ElectronModule.copy(ColorHexCode);
-            return BdApi.showToast(`Hex color code : ${ColorHexCode} was successfully copied`, { type: "success" });
-
-        }
-    }
-
-}
+    return plugin;
+})(global.ZeresPluginLibrary.buildPlugin(config));
