@@ -7,6 +7,7 @@
  * @invite xfvHwqXXKs
  * @website https://www.beheshtmarket.com
  * @source https://github.com/iamehsandvr/ProBanner
+ * @updateUrl https://raw.githubusercontent.com/iamehsandvr/ProBanner/main/ProBanner.plugin.js
  */
 
 module.exports = class ProBanner {
