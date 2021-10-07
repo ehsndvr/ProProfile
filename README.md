@@ -1,4 +1,4 @@
-# ProBanner [![Download][download-badge]][download-link] [![Support][support-badge]][support-link]
+# ProProfile [![Download][download-badge]][download-link] [![Support][support-badge]][support-link]
 En:
 with this plugin :
 You can copy the user banner (banner color and banner photo)
