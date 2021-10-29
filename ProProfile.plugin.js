@@ -24,6 +24,14 @@ const config = {
         ],
         version: "1.0.0",
         description: " with this plugin : You can copy the user banner (banner color and banner photo) You can copy the user's profile picture You can copy About Me to the user You can also copy the user bio",
+        changelog: [
+            {
+                title: "Bugs Squashed",
+                items: [
+                    "Clicking on the user's profile picture in the member list would save the avatar."
+                ]
+            },
+        ]
     },
 };
 
@@ -71,7 +79,7 @@ module.exports = !global.ZeresPluginLibrary ? class {
             const UserBanner = WebpackModules.find(m => m?.default?.displayName === "UserBanner");
             const CustomStatus = WebpackModules.find(m => m?.default?.displayName === "CustomStatus");
             document.addEventListener("click", ({ target }) => {
-                if (target.ariaLabel && target.style.cssText) {
+                if (target.ariaLabel && target.style.cssText && (new RegExp(/avatar\-AvHqJA/).test(target.className))) {
                     let MemberProfileUrl = target.__reactProps$.children.props.children[0].props.children.props.src;
                     MemberProfileUrl = new RegExp(/assets/).test(MemberProfileUrl) ? `https://discord.com${MemberProfileUrl}` : MemberProfileUrl.replace(/([0-9]+)$/, "4096");
                     global.ZLibrary.DiscordModules.ElectronModule.copy(MemberProfileUrl);
