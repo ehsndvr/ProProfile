@@ -79,7 +79,7 @@ module.exports = !global.ZeresPluginLibrary ? class {
             const UserBanner = WebpackModules.find(m => m?.default?.displayName === "UserBanner");
             const CustomStatus = WebpackModules.find(m => m?.default?.displayName === "CustomStatus");
             document.addEventListener("click", ({ target }) => {
-                if (target.ariaLabel && target.style.cssText && (new RegExp(/avatar\-AvHqJA/).test(target.className))) {
+                if (target.ariaLabel && target.style.cssText && (new RegExp(/avatar\-3QF_VA/).test(target.className))) {
                     let MemberProfileUrl = target.__reactProps$.children.props.children[0].props.children.props.src;
                     MemberProfileUrl = new RegExp(/assets/).test(MemberProfileUrl) ? `https://discord.com${MemberProfileUrl}` : MemberProfileUrl.replace(/([0-9]+)$/, "4096");
                     global.ZLibrary.DiscordModules.ElectronModule.copy(MemberProfileUrl);
@@ -97,8 +97,8 @@ module.exports = !global.ZeresPluginLibrary ? class {
             });
             Patcher.after(UserBanner, "default", (_, [props], ret) => {
                 ret.props.onClick = _ => {
-                    let ClassBanner = BdApi.findModuleByProps("banner", "bannerOverlay").banner
-                    if (_.target.classList.contains(ClassBanner) && _.target.style.backgroundImage) {
+                    //let ClassBanner = BdApi.findModuleByProps("banner", "bannerOverlay")
+                    if (_.target.classList.contains("banner-2QYc2d") && _.target.style.backgroundImage) {
                         let BannerUrl = _.target.style.backgroundImage
                         BannerUrl = BannerUrl.substring(4, BannerUrl.length - 1).replace(/["']/g, "")
                         BannerUrl = BannerUrl.replace(/(?:\?size=\d{3,4})?$/, "?size=4096");
