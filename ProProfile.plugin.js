@@ -2,7 +2,7 @@
  * @name ProProfile
  * @author EhsanDavari
  * @authorId 553139953597677568
- * @version 1.0.0
+ * @version 1.0.1
  * @description  with this plugin : You can copy the user banner (banner color and banner photo) You can copy the user's profile picture You can copy About Me to the user You can also copy the user bio
  * @invite xfvHwqXXKs
  * @website https://www.beheshtmarket.com
@@ -22,7 +22,7 @@ const config = {
                 name: "EhsanDavari"
             }
         ],
-        version: "1.0.0",
+        version: "1.0.1",
         description: " with this plugin : You can copy the user banner (banner color and banner photo) You can copy the user's profile picture You can copy About Me to the user You can also copy the user bio",
         changelog: [
             {
@@ -98,7 +98,7 @@ module.exports = !global.ZeresPluginLibrary ? class {
             Patcher.after(UserBanner, "default", (_, [props], ret) => {
                 ret.props.onClick = _ => {
                     //let ClassBanner = BdApi.findModuleByProps("banner", "bannerOverlay")
-                    if (_.target.classList.contains("banner-2QYc2d") && _.target.style.backgroundImage) {
+                    if (_.target.classList.contains("banner-1YaD3N") && _.target.style.backgroundImage) {
                         let BannerUrl = _.target.style.backgroundImage
                         BannerUrl = BannerUrl.substring(4, BannerUrl.length - 1).replace(/["']/g, "")
                         BannerUrl = BannerUrl.replace(/(?:\?size=\d{3,4})?$/, "?size=4096");
