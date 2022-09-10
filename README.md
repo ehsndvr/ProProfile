@@ -1,6 +1,6 @@
 # ProProfile [![Download][download-badge]][download-link] [![Support][support-badge]][support-link]
 En:
-with this plugin : Single Click: Copy User Avatar/Banner/Name Tag/About ME | Double Click: Copy Server Avatar/Banner
+with this plugin : Single Click: Copy User Avatar/Banner/Name Tag/About ME | Double Click: Copy Server Icon/Banner
 
 Fa:
 با یکبار کلیک کردن بروی عکس/بنر/درباره من/نام کاربری کاربر موارد نام برده شده را کپی کنید
