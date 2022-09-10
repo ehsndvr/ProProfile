@@ -5,7 +5,7 @@
  * @version 1.0.4
  * @description  Single Click: Copy User Avatar/Banner/Name Tag/About ME | Double Click: Copy Server Icon/Banner
  * @invite xfvHwqXXKs
- * @website https://www.beheshtmarket.com
+ * @website https://sana14.com
  * @source https://github.com/iamehsandvr/ProProfile
  * @updateUrl https://raw.githubusercontent.com/iamehsandvr/ProBanner/main/ProProfile.plugin.js
  */
