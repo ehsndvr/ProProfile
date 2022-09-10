@@ -3,7 +3,7 @@
  * @author EhsanDavari
  * @authorId 553139953597677568
  * @version 1.0.4
- * @description  Single Click: Copy User Avatar/Banner/Name Tag/About ME | Double Click: Copy Server Avatar/Banner
+ * @description  Single Click: Copy User Avatar/Banner/Name Tag/About ME | Double Click: Copy Server Icon/Banner
  * @invite xfvHwqXXKs
  * @website https://www.beheshtmarket.com
  * @source https://github.com/iamehsandvr/ProProfile
@@ -20,7 +20,7 @@ const config = {
             name: "EhsanDavari",
         },],
         version: "1.0.4",
-        description: "Single Click: Copy User Avatar/Banner/Name Tag/About ME | Double Click: Copy Server Avatar/Banner",
+        description: "Single Click: Copy User Avatar/Banner/Name Tag/About ME | Double Click: Copy Server Icon/Banner",
     },
 };
 
@@ -200,62 +200,6 @@ module.exports = !global.ZeresPluginLibrary ?
                         );
                     };
                 });
-                // Patcher.after(UserBanner, "default", (_, [props], ret) => {
-                //     ret.props.onClick = (_) => {
-                //         if (
-                //             _.target.classList.contains(WebpackModules.getByProps("banner").profileBanner) &&
-                //             _.target.style.backgroundImage
-                //         ) {
-                //             let BannerUrl = _.target.style.backgroundImage;
-                //             BannerUrl = BannerUrl.substring(
-                //                 4,
-                //                 BannerUrl.length - 1
-                //             ).replace(/["']/g, "");
-                //             BannerUrl = BannerUrl.replace(
-                //                 /(?:\?size=\d{3,4})?$/,
-                //                 "?size=4096"
-                //             );
-                //             ElectronModule.copy(BannerUrl);
-                //             return Toasts.success("Banner link was successfully copied");
-                //         } else if (_.target.style.backgroundColor) {
-                //             const ColorCode = _.target.style.backgroundColor;
-                //             var RGBColorCode = ColorCode.replaceAll(
-                //                 /[a-z() ]+/gi,
-                //                 ""
-                //             ).split(",");
-                //             const RGB2HEX = {
-                //                 r: Number(RGBColorCode[0]).toString(16),
-                //                 g: Number(RGBColorCode[1]).toString(16),
-                //                 b: Number(RGBColorCode[2]).toString(16),
-                //             };
-                //             const ColorHexCode =
-                //                 "#" +
-                //                 (RGB2HEX.r.length == 1 ? 0 + RGB2HEX.r : RGB2HEX.r) +
-                //                 (RGB2HEX.g.length == 1 ? 0 + RGB2HEX.g : RGB2HEX.g) +
-                //                 (RGB2HEX.b.length == 1 ? 0 + RGB2HEX.b : RGB2HEX.b);
-                //             ElectronModule.copy(ColorHexCode);
-                //             return Toasts.success(
-                //                 `Hex color code : ${ColorHexCode} was successfully copied`
-                //             );
-                //         }
-                //     };
-                //     document.addEventListener("click", (target) => {
-                //         if (target.ariaLabel && target.style.cssText) {
-                //             let MemberProfileUrl =
-                //                 target.__reactProps$.children.props.children[0].props.children
-                //                     .props.src;
-                //             MemberProfileUrl = new RegExp(/assets/).test(MemberProfileUrl) ?
-                //                 `https://discord.com${MemberProfileUrl}` :
-                //                 MemberProfileUrl.replace(/([0-9]+)$/, "4096");
-                //             global.ZLibrary.DiscordModules.ElectronModule.copy(
-                //                 MemberProfileUrl
-                //             );
-                //             return BdApi.showToast(`User profile image link successfully`, {
-                //                 type: "success",
-                //             });
-                //         }
-                //     });
-                // });
                 Patcher.after(UserBio, "default", (_, [props], ret) => {
                     ret.props.style = {
                         cursor: "pointer",
