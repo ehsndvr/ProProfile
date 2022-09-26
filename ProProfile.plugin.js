@@ -2,7 +2,7 @@
  * @name ProProfile
  * @author EhsanDavari
  * @authorId 553139953597677568
- * @version 1.0.4
+ * @version 1.0.5
  * @description  Single Click: Copy User Avatar/Banner/Name Tag/About ME | Double Click: Copy Server Icon/Banner
  * @invite xfvHwqXXKs
  * @website https://sana14.com
@@ -19,7 +19,7 @@ const config = {
         authors: [{
             name: "EhsanDavari",
         },],
-        version: "1.0.4",
+        version: "1.0.5",
         description: "Single Click: Copy User Avatar/Banner/Name Tag/About ME | Double Click: Copy Server Icon/Banner",
     },
 };
@@ -84,147 +84,91 @@ module.exports = !global.ZeresPluginLibrary ?
                 Patcher.unpatchAll();
             }
             ProProfile() {
-                const NameTag = WebpackModules.find(
-                    (m) => m?.default?.displayName === "NameTag"
-                );
-                const UserBio = WebpackModules.find(
-                    (m) => m?.default?.displayName === "UserBio"
-                );
-                const UserBanner = WebpackModules.find(
-                    (m) => m?.default?.displayName === "UserBanner"
-                );
-                const CustomStatus = WebpackModules.find(
-                    (m) => m?.default?.displayName === "CustomStatus"
-                );
-                document.addEventListener("dblclick", ({
-                    target
-                }) => {
-                    if (new RegExp(/guild*/).test(target.dataset.listItemId)) {
+                const UserProfileModalHeader = WebpackModules.find((m) => m?.default?.displayName === "UserProfileModalHeader");
+                const NavItem = WebpackModules.find((m) => m?.default?.displayName === "NavItem");
+                const GuildSubheader = WebpackModules.find((m) => m?.default?.displayName === "GuildSubheader")
+                const NameTag = WebpackModules.find((m) => m?.default?.displayName === "NameTag");
+                const UserBio = WebpackModules.find((m) => m?.default?.displayName === "UserBio");
+                const CustomStatus = WebpackModules.find((m) => m?.default?.displayName === "CustomStatus");
+                Patcher.after(UserProfileModalHeader, "default", (_, [props], ret) => {
+                    ret.props.onClick = (_) => {
+                        if (_.target.classList.contains(WebpackModules.find((m) => m?.mask && m?.wrapper && m?.avatar).wrapper)) {
+                            ElectronModule.copy((props.user.getAvatarURL()).replace(/([0-9]+)$/, "4096"));
+                            return Toasts.success(
+                                `User profile image link successfully copied`
+                            );
+                        } else if (_.target.classList.contains(WebpackModules.find((m) => m?.bannerHeightProfile === "106px").banner)) {
+                            ElectronModule.copy(ret.props.children[0].props.bannerSrc ? ret.props.children[0].props.bannerSrc.replace(/([0-9]+)$/, "4096") : (() => {
+                                let ColorCode = document.getElementsByClassName(WebpackModules.find((m) => m?.bannerHeightProfile === "106px").banner)[0].style.backgroundColor
+                                var RGBColorCode = ColorCode.replaceAll(
+                                    /[a-z() ]+/gi,
+                                    ""
+                                ).split(",");
+                                const RGB2HEX = {
+                                    r: Number(RGBColorCode[0]).toString(16),
+                                    g: Number(RGBColorCode[1]).toString(16),
+                                    b: Number(RGBColorCode[2]).toString(16),
+                                };
+                                const ColorHexCode =
+                                    "#" +
+                                    (RGB2HEX.r.length == 1 ? 0 + RGB2HEX.r : RGB2HEX.r) +
+                                    (RGB2HEX.g.length == 1 ? 0 + RGB2HEX.g : RGB2HEX.g) +
+                                    (RGB2HEX.b.length == 1 ? 0 + RGB2HEX.b : RGB2HEX.b);
+                                ElectronModule.copy(ColorHexCode);
+                                return Toasts.success(
+                                    `Hex color code : ${ColorHexCode} was successfully copied`
+                                );
+                            })());
+                            return Toasts.success(
+                                `Banner link was successfully copied`
+                            );
+                        }
+
+                    };
+                })
+                Patcher.after(NavItem, "default", (_, [props], ret) => {
+                    ret.props.onDoubleClick = (_) => {
                         global.ZLibrary.DiscordModules.ElectronModule.copy(
-                            target.children[0].currentSrc.replace(/([0-9]+)$/, "4096")
+                            props.icon.replace(/([0-9]+)$/, "4096")
                         );
                         return BdApi.showToast(`Server icon link successfully copied`, {
                             type: "success",
                         });
-                    } else if (
-                        new RegExp(/animatedBannerHoverLayer*/).test(target.className)
-                    ) {
+                    }
+                })
+                Patcher.after(GuildSubheader, "default", (_, [props], ret) => {
+                    ret.ref.current.parentElement.childNodes[0].ondblclick = (_) => {
                         global.ZLibrary.DiscordModules.ElectronModule.copy(
-                            `https://cdn.discordapp.com/banners/${target.__reactFiber$.return.memoizedProps.guild.id}/${target.__reactFiber$.return.memoizedProps.guildBanner}.gif?size=4096`
+                            WebpackModules.find((m) => m?.getGuildBannerURL).getGuildBannerURL(props.guild, false).replace(/([0-9]+)$/, "4096")
                         );
                         return BdApi.showToast(`Server banner link successfully copied`, {
                             type: "success",
                         });
-                    } else if (new RegExp(/height:*/).test(target.style.cssText)) {
-                        var strGuildBanner = document.getElementsByClassName(
-                            "animatedContainer-2laTjx"
-                        );
-                        global.ZLibrary.DiscordModules.ElectronModule.copy(
-                            strGuildBanner[0].children[0].children[0].currentSrc.replace(
-                                /([0-9]+)$/,
-                                "4096"
-                            )
-                        );
-                        return BdApi.showToast(`Server icon link successfully copied`, {
-                            type: "success",
-                        });
                     }
-                });
-                document.addEventListener("click", ({
-                    target
-                }) => {
-                    if (
-                        target.ariaLabel &&
-                        target.style.cssText &&
-                        new RegExp(/avatar\-3QF_VA/).test(target.className)
-                    ) {
-                        let MemberProfileUrl =
-                            target.__reactProps$.children.props.children[0].props
-                                .children[0].props.children.props.src;
-                        MemberProfileUrl = new RegExp(/assets/).test(MemberProfileUrl) ?
-                            `https://discord.com${MemberProfileUrl}` :
-                            MemberProfileUrl.replace(/([0-9]+)$/, "4096");
-                        global.ZLibrary.DiscordModules.ElectronModule.copy(
-                            MemberProfileUrl
-                        );
-                        return BdApi.showToast(`User profile image link successfully`, {
-                            type: "success",
-                        });
-                    } else if (new RegExp(/banner\-2boKnS/).test(target.className)
-                    ) {
-                        console.log(target);
-                        if (target.style.backgroundColor && target.style.backgroundImage == "") {
-                            const ColorCode = target.style.backgroundColor;
-                            var RGBColorCode = ColorCode.replaceAll(
-                                /[a-z() ]+/gi,
-                                ""
-                            ).split(",");
-                            const RGB2HEX = {
-                                r: Number(RGBColorCode[0]).toString(16),
-                                g: Number(RGBColorCode[1]).toString(16),
-                                b: Number(RGBColorCode[2]).toString(16),
-                            };
-                            const ColorHexCode =
-                                "#" +
-                                (RGB2HEX.r.length == 1 ? 0 + RGB2HEX.r : RGB2HEX.r) +
-                                (RGB2HEX.g.length == 1 ? 0 + RGB2HEX.g : RGB2HEX.g) +
-                                (RGB2HEX.b.length == 1 ? 0 + RGB2HEX.b : RGB2HEX.b);
-                            ElectronModule.copy(ColorHexCode);
-                            return Toasts.success(
-                                `Hex color code : ${ColorHexCode} was successfully copied`
-                            );
-                        } else {
-                            let BannerUrl = target.style.backgroundImage;
-                            BannerUrl = BannerUrl.substring(
-                                4,
-                                BannerUrl.length - 1
-                            ).replace(/["']/g, "");
-                            BannerUrl = BannerUrl.replace(
-                                /(?:\?size=\d{3,4})?$/,
-                                "?size=4096"
-                            );
-                            ElectronModule.copy(BannerUrl);
-                            return Toasts.success("Banner link was successfully copied");
-                        }
-                    }
-
-                });
+                })
                 Patcher.after(NameTag, "default", (_, [props], ret) => {
-                    ret.props.style = {
-                        cursor: "pointer",
-                    };
                     ret.props.onClick = (_) => {
-                        ElectronModule.copy(`${props.name}#${props.discriminator}`);
-                        Toasts.success(
-                            `Successfully copied username for <strong>${props.name}</strong>!`
-                        );
-                    };
-                });
+                        global.ZLibrary.DiscordModules.ElectronModule.copy(`${props.name}#${props.discriminator}`)
+                        return BdApi.showToast(`Name tag successfully copied`, {
+                            type: "success",
+                        });
+                    }
+                })
                 Patcher.after(UserBio, "default", (_, [props], ret) => {
-                    ret.props.style = {
-                        cursor: "pointer",
-                    };
                     ret.props.onClick = (_) => {
-                        ElectronModule.copy(props.userBio);
-                        Toasts.success(`Successfully copied <strong>User Bio</strong>! `);
-                    };
-                });
+                        global.ZLibrary.DiscordModules.ElectronModule.copy(props.userBio)
+                        return BdApi.showToast(`User bio successfully copied`, {
+                            type: "success",
+                        });
+                    }
+                })
                 Patcher.after(CustomStatus, "default", (_, [props], ret) => {
-                    ret.props.style = {
-                        cursor: "pointer",
-                    };
                     ret.props.onClick = (_) => {
-                        "state" in props.activity && !("emoji" in props.activity) ?
-                            ElectronModule.copy(`${props.activity.state}`) :
-                            "emoji" in props.activity && "state" in props.activity ?
-                                ElectronModule.copy(
-                                    `${props.activity.emoji.name} ${props.activity.state}`
-                                ) :
-                                ElectronModule.copy(`${props.activity.emoji.name}`);
-                        Toasts.success(
-                            `Successfully copied <strong>User Status</strong>! `
-                        );
-                    };
+                        global.ZLibrary.DiscordModules.ElectronModule.copy((props.activity.emoji ? props.activity.emoji.animated ? `<:${props.activity.emoji.name}:${props.activity.emoji.id}>` : props.activity.emoji.name : "") + " " + props.activity.state)
+                        return BdApi.showToast(`User status successfully copied`, {
+                            type: "success",
+                        });
+                    }
                 });
             }
         }
